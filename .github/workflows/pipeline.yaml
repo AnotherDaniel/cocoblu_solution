@@ -1,0 +1,23 @@
+kind: pipeline
+sources:
+  - kind: git
+    url: cocoblu-upstream
+    ref: main
+  - kind: git
+    url: cocoblu-solution
+    ref: main
+elements:
+  - kind: rust
+    name: cocoblu-upstream
+    sources:
+      - cocoblu-upstream
+    config-opts:
+      - --release
+  - kind: rust
+    name: cocoblu-solution
+    sources:
+      - cocoblu-solution
+    config-opts:
+      - --release
+    build-depends:
+      - cocoblu-upstream

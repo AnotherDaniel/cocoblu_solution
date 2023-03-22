@@ -1,0 +1,47 @@
+name: Build Rust Projects with BuildStream
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Install BuildStream
+      run: sudo apt-get update && sudo apt-get install -y buildstream
+
+    - name: Initialize BuildStream Project
+      run: |
+        buildstream init solution.bst
+        cd solution.bst
+        mkdir sources
+
+    - name: Add Rust Projects to BuildStream Project
+      run: |
+        cd solution.bst
+        bst source add cocoblu-upstream https://github.com/AnotherDaniel/cocoblu_upstream.git
+        bst source add cocoblu-solution https://github.com/AnotherDaniel/cocoblu_solution.git
+
+    - name: Define BuildStream Pipeline
+      run: |
+        cd solution.bst
+        cat <<EOF > build.yml
+        include: pipeline.yml
+        EOF
+
+    - name: Build Rust Projects with BuildStream
+      run: |
+        cd solution.bst
+        buildstream build --explicit cocoblu-solution
+
+    - name: Archive Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifacts
+        path: solution.bst/_build/
