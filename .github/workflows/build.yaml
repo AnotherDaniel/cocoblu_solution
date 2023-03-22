@@ -18,7 +18,7 @@ jobs:
 
     - name: Initialize BuildStream Project
       run: |
-        buildstream init solution.bst
+        /usr/bin/buildstream init solution.bst
         cd solution.bst
         mkdir sources
 
