@@ -16,6 +16,10 @@ jobs:
     - name: Install BuildStream
       run: sudo apt-get update && sudo apt-get install -y buildstream
 
+    - name: Start interactive session
+      run: |
+        docker run -it ${{ github.repository }}:$GITHUB_SHA /bin/bash
+
     - name: Initialize BuildStream Project
       run: |
         /usr/bin/buildstream init solution.bst
